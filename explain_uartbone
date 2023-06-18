@@ -1,0 +1,208 @@
+builder_shared_dat_r
+__main___uartbone_wishbone_adr
+
+
+
+
+
+always @(*) begin
+    builder_rhs_array_muxed0 <= 32'd0;
+    case (builder_grant)
+        1'd0: begin
+            builder_rhs_array_muxed0 <= __main___basesoc_ibus_adr;
+        end
+        1'd1: begin
+            builder_rhs_array_muxed0 <= __main___basesoc_dbus_adr;
+        end
+        default: begin
+            builder_rhs_array_muxed0 <= __main___uartbone_wishbone_adr;
+        end
+    endcase
+end
+
+
+
+assign builder_shared_adr = builder_rhs_array_muxed0;
+
+
+    builder_slave_sel <= 4'd0;
+    builder_slave_sel[0] <= (builder_shared_adr[29:13] == 1'd0);
+    builder_slave_sel[1] <= (builder_shared_adr[29:11] == 16'd32768);
+    builder_slave_sel[2] <= (builder_shared_adr[29:19] == 10'd512);
+    builder_slave_sel[3] <= (builder_shared_adr[29:14] == 16'd61440);
+    
+    
+    
+    assign __main___basesoc_basesoc_ram_bus_adr = builder_shared_adr;
+    
+    
+always @(*) begin
+    builder_rhs_array_muxed0 <= 32'd0;
+    case (builder_grant)
+        1'd0: begin
+            builder_rhs_array_muxed0 <= __main___basesoc_ibus_adr;
+        end
+        1'd1: begin
+            builder_rhs_array_muxed0 <= __main___basesoc_dbus_adr;
+        end
+        default: begin
+            builder_rhs_array_muxed0 <= __main___uartbone_wishbone_adr;
+        end
+    endcase
+end
+always @(*) begin
+    builder_rhs_array_muxed1 <= 32'd0;
+    case (builder_grant)
+        1'd0: begin
+            builder_rhs_array_muxed1 <= __main___basesoc_ibus_dat_w;
+        end
+        1'd1: begin
+            builder_rhs_array_muxed1 <= __main___basesoc_dbus_dat_w;
+        end
+        default: begin
+            builder_rhs_array_muxed1 <= __main___uartbone_wishbone_dat_w;
+        end
+    endcase
+end
+always @(*) begin
+    builder_rhs_array_muxed2 <= 4'd0;
+    case (builder_grant)
+        1'd0: begin
+            builder_rhs_array_muxed2 <= __main___basesoc_ibus_sel;
+        end
+        1'd1: begin
+            builder_rhs_array_muxed2 <= __main___basesoc_dbus_sel;
+        end
+        default: begin
+            builder_rhs_array_muxed2 <= __main___uartbone_wishbone_sel;
+        end
+    endcase
+end
+always @(*) begin
+    builder_rhs_array_muxed3 <= 1'd0;
+    case (builder_grant)
+        1'd0: begin
+            builder_rhs_array_muxed3 <= __main___basesoc_ibus_cyc;
+        end
+        1'd1: begin
+            builder_rhs_array_muxed3 <= __main___basesoc_dbus_cyc;
+        end
+        default: begin
+            builder_rhs_array_muxed3 <= __main___uartbone_wishbone_cyc;
+        end
+    endcase
+end
+always @(*) begin
+    builder_rhs_array_muxed4 <= 1'd0;
+    case (builder_grant)
+        1'd0: begin
+            builder_rhs_array_muxed4 <= __main___basesoc_ibus_stb;
+        end
+        1'd1: begin
+            builder_rhs_array_muxed4 <= __main___basesoc_dbus_stb;
+        end
+        default: begin
+            builder_rhs_array_muxed4 <= __main___uartbone_wishbone_stb;
+        end
+    endcase
+end
+always @(*) begin
+    builder_rhs_array_muxed5 <= 1'd0;
+    case (builder_grant)
+        1'd0: begin
+            builder_rhs_array_muxed5 <= __main___basesoc_ibus_we;
+        end
+        1'd1: begin
+            builder_rhs_array_muxed5 <= __main___basesoc_dbus_we;
+        end
+        default: begin
+            builder_rhs_array_muxed5 <= __main___uartbone_wishbone_we;
+        end
+    endcase
+end
+always @(*) begin
+    builder_rhs_array_muxed6 <= 3'd0;
+    case (builder_grant)
+        1'd0: begin
+            builder_rhs_array_muxed6 <= __main___basesoc_ibus_cti;
+        end
+        1'd1: begin
+            builder_rhs_array_muxed6 <= __main___basesoc_dbus_cti;
+        end
+        default: begin
+            builder_rhs_array_muxed6 <= __main___uartbone_wishbone_cti;
+        end
+    endcase
+end
+always @(*) begin
+    builder_rhs_array_muxed7 <= 2'd0;
+    case (builder_grant)
+        1'd0: begin
+            builder_rhs_array_muxed7 <= __main___basesoc_ibus_bte;
+        end
+        1'd1: begin
+            builder_rhs_array_muxed7 <= __main___basesoc_dbus_bte;
+        end
+        default: begin
+            builder_rhs_array_muxed7 <= __main___uartbone_wishbone_bte;
+        end
+    endcase
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+uartbone_cyc dbus_cyc ibus_cyc
+
+
+case (builder_grant)
+  0: begin
+    if ~uartbone_cyc
+      if dbus_cyc
+        builder_grant = 1
+          else
+            if ibus_cyc
+              builder_grant = 2
+  1: begin
+    if ~dbus_cyc
+      if ibus_cyc
+        builder_grant = 2
+          else
+            if uartbone_cyc
+              builder_grant = 0
+  2: begin
+    if ~ibus_cyc
+      if uartbone_cyc
+        builder_grant = 0
+          else
+            if dbus_cyc
+              builder_grant = 1
+endcase
+    
+    
+    
+    
+    
+     builder_request = {__main___uartbone_wishbone_cyc, __main___basesoc_dbus_cyc, __main___basesoc_ibus_cyc};
+     
+     
+     
+     
+     
+     
+    
+    
+    
+    
+    
+
+
